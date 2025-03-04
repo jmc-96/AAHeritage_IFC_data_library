@@ -1,1 +1,1 @@
-# AAHeritage_IFC_data_library
+# A²Heritage IFC data library
