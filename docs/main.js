@@ -1,7 +1,6 @@
 /**
  * Application bootstrap.
  * Fetches schema.json, initialises all modules, and wires the toolbar button.
- * All heavy logic lives in modules/; this file is intentionally thin.
  */
 import { state } from "./modules/state.js";
 import { buildIndexes } from "./modules/schema.js";

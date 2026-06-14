@@ -4,6 +4,18 @@ ehthumbs.db
 desktop.ini
 .DS_Store
 
+# Dependencies
+node_modules/
+
+# Vite / frontend build artifacts
+dist/
+.vite/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
 # BIM software backups / temp files
 *.bak
 *.tmp
