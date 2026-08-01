@@ -4,6 +4,9 @@ ehthumbs.db
 desktop.ini
 .DS_Store
 
+
+ontology/
+
 # Dependencies
 node_modules/
 
