@@ -1,5 +1,4 @@
 :root {
-  /* ── Colours ── */
   --bg: #ffffff;
   --surface: #f3f4f6;
   --surface-hover: #e5e7eb;
@@ -64,6 +63,15 @@ body {
 }
 .controls button:hover { background: var(--surface-hover); }
 
+/* Search feedback — empty and out of flow until it has something to say */
+.searchStatus {
+  font-size: 12px;
+  color: var(--muted);
+  max-width: 220px;
+  line-height: 1.35;
+}
+.searchStatus:empty { display: none; }
+
 /* ───── App-level layout: content + inspector sidebar ───── */
 .appLayout {
   display: grid;
@@ -79,8 +87,6 @@ body {
 .appContent {
   min-width: 0;
 }
-
-.hidden { display: none !important; }
 
 /* ───── Inspector sidebar ───── */
 .inspector {

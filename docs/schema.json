@@ -2,7 +2,8 @@
   "meta": {
     "name": "IFC Class Browser (subset)",
     "schema": "IFC 4.3.2.0 (IFC4X3_ADD2)",
-    "version": "0.1.0"
+    "version": "0.2.0",
+    "note": "A subset of IFC4X3_ADD2 covering the classes used by the A2Heritage data library. Entity names, supertypes and abstract/concrete markings are taken from the buildingSMART IFC4X3_ADD2 lexicon."
   },
   "roots": ["IfcRoot"],
   "nodes": [
@@ -19,13 +20,15 @@
       "id": "IfcObjectDefinition",
       "label": "IfcObjectDefinition",
       "kind": "abstract",
+      "description": "Generalisation of any semantically treated thing: individual occurrences (IfcObject) and the types they share (IfcTypeObject).",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcObjectDefinition.htm",
-      "children": ["IfcObject"]
+      "children": ["IfcObject", "IfcTypeObject"]
     },
     {
       "id": "IfcObject",
       "label": "IfcObject",
       "kind": "abstract",
+      "description": "An individual occurrence of something in the project, as built or as planned.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcObject.htm",
       "children": ["IfcProduct", "IfcProcess"]
     },
@@ -33,6 +36,7 @@
       "id": "IfcProduct",
       "label": "IfcProduct",
       "kind": "abstract",
+      "description": "An object with a physical or spatial location in the project.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcProduct.htm",
       "children": ["IfcSpatialElement", "IfcElement"]
     },
@@ -40,6 +44,7 @@
       "id": "IfcProcess",
       "label": "IfcProcess",
       "kind": "abstract",
+      "description": "Something that occurs over time. Used by this library for conservation and maintenance activities.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcProcess.htm",
       "children": ["IfcEvent", "IfcProcedure", "IfcTask"]
     },
@@ -47,6 +52,7 @@
       "id": "IfcEvent",
       "label": "IfcEvent",
       "kind": "entity",
+      "description": "A process triggered at a point in time; the counterpart of CIDOC-CRM E5 Event in the decay analysis.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcEvent.htm",
       "children": []
     },
@@ -54,6 +60,7 @@
       "id": "IfcProcedure",
       "label": "IfcProcedure",
       "kind": "entity",
+      "description": "A logical sequence of work, independent of any schedule.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcProcedure.htm",
       "children": []
     },
@@ -61,6 +68,7 @@
       "id": "IfcTask",
       "label": "IfcTask",
       "kind": "entity",
+      "description": "An identified, schedulable unit of work. Used for planned and suggested interventions.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcTask.htm",
       "children": []
     },
@@ -69,6 +77,7 @@
       "id": "IfcSpatialElement",
       "label": "IfcSpatialElement",
       "kind": "abstract",
+      "description": "A region of space, however it is delimited.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSpatialElement.htm",
       "children": ["IfcSpatialStructureElement", "IfcSpatialZone"]
     },
@@ -76,13 +85,15 @@
       "id": "IfcSpatialStructureElement",
       "label": "IfcSpatialStructureElement",
       "kind": "abstract",
+      "description": "An element of the project's spatial hierarchy: site, facility, storey or space.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSpatialStructureElement.htm",
-      "children": ["IfcSite", "IfcFacility", "IfcFacilityPart", "IfcSpace"]
+      "children": ["IfcSite", "IfcFacility", "IfcFacilityPart", "IfcBuildingStorey", "IfcSpace"]
     },
     {
       "id": "IfcFacility",
       "label": "IfcFacility",
-      "kind": "abstract",
+      "kind": "entity",
+      "description": "A built facility. IFC4X3 introduced this as the generalisation of IfcBuilding, so that bridges, roads, railways and marine works sit alongside buildings.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcFacility.htm",
       "children": ["IfcBuilding"]
     },
@@ -90,6 +101,7 @@
       "id": "IfcBuilding",
       "label": "IfcBuilding",
       "kind": "entity",
+      "description": "A building. Carries this library's HBuilding_DataSheet, HBuilding_MaterialConsistency and HBuilding_HistoricalAnalysis property sets.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcBuilding.htm",
       "children": []
     },
@@ -97,13 +109,15 @@
       "id": "IfcFacilityPart",
       "label": "IfcFacilityPart",
       "kind": "abstract",
+      "description": "A subdivision of a facility. Its subtypes are domain-specific (bridge, rail, road, marine) and fall outside this subset. Note that IfcBuildingStorey is NOT one of them.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcFacilityPart.htm",
-      "children": ["IfcBuildingStorey"]
+      "children": []
     },
     {
       "id": "IfcBuildingStorey",
       "label": "IfcBuildingStorey",
       "kind": "entity",
+      "description": "A horizontal level within a building. A direct subtype of IfcSpatialStructureElement, not of IfcFacilityPart.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcBuildingStorey.htm",
       "children": []
     },
@@ -111,6 +125,7 @@
       "id": "IfcSite",
       "label": "IfcSite",
       "kind": "entity",
+      "description": "The area of land on which the project is situated.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSite.htm",
       "children": []
     },
@@ -118,6 +133,7 @@
       "id": "IfcSpace",
       "label": "IfcSpace",
       "kind": "entity",
+      "description": "A bounded volume. This library tailors servant and served spaces, and vaulted room/bay spaces, for heritage assets.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSpace.htm",
       "children": []
     },
@@ -125,6 +141,7 @@
       "id": "IfcSpatialZone",
       "label": "IfcSpatialZone",
       "kind": "entity",
+      "description": "A non-hierarchical spatial region, for zones that cut across the spatial structure.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSpatialZone.htm",
       "children": []
     },
@@ -133,22 +150,24 @@
       "id": "IfcElement",
       "label": "IfcElement",
       "kind": "abstract",
+      "description": "A physically existing constituent of a construction work.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcElement.htm",
-      "children": ["IfcBuildingElement", "IfcElementAssembly", "IfcFeatureElement"]
+      "children": ["IfcBuiltElement", "IfcElementAssembly", "IfcFeatureElement"]
     },
     {
-      "id": "IfcBuildingElement",
-      "label": "IfcBuildingElement",
-      "kind": "abstract",
-      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcBuildingElement.htm",
-      "children": ["IfcWall", "IfcColumn", "IfcSlab", "IfcRoof", "IfcBeam"]
-    },
-    {
-      "id": "IfcWall",
-      "label": "IfcWall",
+      "id": "IfcBuiltElement",
+      "label": "IfcBuiltElement",
       "kind": "entity",
-      "description": "Vertical construction element that bounds or subdivides spaces.",
-      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcWall.htm",
+      "description": "A physical construction element. Renamed from IfcBuildingElement in IFC4X3; the older name no longer exists in the schema.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcBuiltElement.htm",
+      "children": ["IfcBeam", "IfcColumn", "IfcMember", "IfcRoof", "IfcSlab", "IfcWall"]
+    },
+    {
+      "id": "IfcBeam",
+      "label": "IfcBeam",
+      "kind": "entity",
+      "description": "Horizontal or inclined structural member that carries loads primarily by bending.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcBeam.htm",
       "children": []
     },
     {
@@ -160,11 +179,11 @@
       "children": []
     },
     {
-      "id": "IfcSlab",
-      "label": "IfcSlab",
+      "id": "IfcMember",
+      "label": "IfcMember",
       "kind": "entity",
-      "description": "Horizontal construction element (floor, roof slab, landing, etc.).",
-      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSlab.htm",
+      "description": "A structural member with no more specialised classification. Used by this library's template for vault keystones.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcMember.htm",
       "children": []
     },
     {
@@ -176,17 +195,26 @@
       "children": []
     },
     {
-      "id": "IfcBeam",
-      "label": "IfcBeam",
+      "id": "IfcSlab",
+      "label": "IfcSlab",
       "kind": "entity",
-      "description": "Horizontal or inclined structural member that carries loads primarily by bending.",
-      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcBeam.htm",
+      "description": "Horizontal construction element (floor, roof slab, landing). This library uses IfcSlabType to represent the intrados of a vault net.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSlab.htm",
+      "children": []
+    },
+    {
+      "id": "IfcWall",
+      "label": "IfcWall",
+      "kind": "entity",
+      "description": "Vertical construction element that bounds or subdivides spaces. Brick and rubble masonry types are included in the library.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcWall.htm",
       "children": []
     },
     {
       "id": "IfcElementAssembly",
       "label": "IfcElementAssembly",
-      "kind": "abstract",
+      "kind": "entity",
+      "description": "An assembly of elements acting as a whole. Used by this library for vault perimetral arches, ribs and tiercerons.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcElementAssembly.htm",
       "children": []
     },
@@ -194,7 +222,105 @@
       "id": "IfcFeatureElement",
       "label": "IfcFeatureElement",
       "kind": "abstract",
+      "description": "A modification applied to an element, rather than an element in its own right.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcFeatureElement.htm",
+      "children": ["IfcSurfaceFeature"]
+    },
+    {
+      "id": "IfcSurfaceFeature",
+      "label": "IfcSurfaceFeature",
+      "kind": "entity",
+      "description": "A feature applied to the surface of an element. With PredefinedType USERDEFINED, this library uses it to represent decay-analysed surfaces carrying the Decay - Report property set.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSurfaceFeature.htm",
+      "children": []
+    },
+
+    {
+      "id": "IfcTypeObject",
+      "label": "IfcTypeObject",
+      "kind": "entity",
+      "description": "The common definition shared by a set of occurrences. This library's property sets are type-driven, so this is the branch they bind to.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcTypeObject.htm",
+      "children": ["IfcTypeProduct"]
+    },
+    {
+      "id": "IfcTypeProduct",
+      "label": "IfcTypeProduct",
+      "kind": "entity",
+      "description": "A type with a geometric representation, shared by all its occurrences.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcTypeProduct.htm",
+      "children": ["IfcElementType", "IfcSpatialElementType"]
+    },
+    {
+      "id": "IfcElementType",
+      "label": "IfcElementType",
+      "kind": "abstract",
+      "description": "The type definition of an element occurrence. Note that IfcTypeElement is not a valid IFC entity name; this is the correct one.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcElementType.htm",
+      "children": ["IfcBuiltElementType"]
+    },
+    {
+      "id": "IfcBuiltElementType",
+      "label": "IfcBuiltElementType",
+      "kind": "entity",
+      "description": "The type definition of a built element.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcBuiltElementType.htm",
+      "children": ["IfcColumnType", "IfcMemberType", "IfcSlabType", "IfcWallType"]
+    },
+    {
+      "id": "IfcColumnType",
+      "label": "IfcColumnType",
+      "kind": "entity",
+      "description": "Type definition for columns. The project template includes a Corinthian column type classified against the MIDAS Heritage dictionary.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcColumnType.htm",
+      "children": []
+    },
+    {
+      "id": "IfcMemberType",
+      "label": "IfcMemberType",
+      "kind": "entity",
+      "description": "Type definition for members. The project template includes a vault keystone type.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcMemberType.htm",
+      "children": []
+    },
+    {
+      "id": "IfcSlabType",
+      "label": "IfcSlabType",
+      "kind": "entity",
+      "description": "Type definition for slabs. Used to represent the intrados of a vault net; carries the BElement_VaultNet property set template.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSlabType.htm",
+      "children": []
+    },
+    {
+      "id": "IfcWallType",
+      "label": "IfcWallType",
+      "kind": "entity",
+      "description": "Type definition for walls. The project template includes brick masonry and rubble masonry types.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcWallType.htm",
+      "children": []
+    },
+    {
+      "id": "IfcSpatialElementType",
+      "label": "IfcSpatialElementType",
+      "kind": "abstract",
+      "description": "The type definition of a spatial element.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSpatialElementType.htm",
+      "children": ["IfcSpatialStructureElementType"]
+    },
+    {
+      "id": "IfcSpatialStructureElementType",
+      "label": "IfcSpatialStructureElementType",
+      "kind": "abstract",
+      "description": "The type definition of a spatial structure element.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSpatialStructureElementType.htm",
+      "children": ["IfcSpaceType"]
+    },
+    {
+      "id": "IfcSpaceType",
+      "label": "IfcSpaceType",
+      "kind": "entity",
+      "description": "Type definition for spaces. Carries this library's FM_ServantSpace and FM_ServedSpace templates, plus the vaulted room/bay type.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSpaceType.htm",
       "children": []
     },
 
@@ -202,7 +328,7 @@
       "id": "IfcPropertyDefinition",
       "label": "IfcPropertyDefinition",
       "kind": "abstract",
-      "description": "Superclass for property-related definitions (property sets, quantity sets, etc.).",
+      "description": "Superclass for property-related definitions: property sets, quantity sets, and the templates that declare them.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcPropertyDefinition.htm",
       "children": ["IfcPropertySetDefinition", "IfcPropertyTemplateDefinition"]
     },
@@ -210,27 +336,31 @@
       "id": "IfcPropertySetDefinition",
       "label": "IfcPropertySetDefinition",
       "kind": "abstract",
+      "description": "A container of properties attached to an object or a type.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcPropertySetDefinition.htm",
-      "children": ["IfcPredefinedPropertySet", "IfcPropertySet", "IfcQuantitySet"]
+      "children": ["IfcPreDefinedPropertySet", "IfcPropertySet", "IfcQuantitySet"]
     },
     {
-      "id": "IfcPredefinedPropertySet",
-      "label": "IfcPredefinedPropertySet",
-      "kind": "entity",
-      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcPredefinedPropertySet.htm",
+      "id": "IfcPreDefinedPropertySet",
+      "label": "IfcPreDefinedPropertySet",
+      "kind": "abstract",
+      "description": "A property set whose properties are fixed by the schema. Note the capital D in PreDefined — IfcPredefinedPropertySet is not a valid entity name.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcPreDefinedPropertySet.htm",
       "children": []
     },
     {
       "id": "IfcPropertySet",
       "label": "IfcPropertySet",
       "kind": "entity",
+      "description": "A user-defined container of properties. Applying this library's templates in an authoring tool produces instances of this entity.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcPropertySet.htm",
       "children": []
     },
     {
       "id": "IfcQuantitySet",
       "label": "IfcQuantitySet",
-      "kind": "entity",
+      "kind": "abstract",
+      "description": "A container of physical quantities derived from an object's geometry.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcQuantitySet.htm",
       "children": []
     },
@@ -238,14 +368,48 @@
       "id": "IfcPropertyTemplateDefinition",
       "label": "IfcPropertyTemplateDefinition",
       "kind": "abstract",
+      "description": "Superclass for the templates that declare the shape of property sets. This is the mechanism the A2Heritage library is built on.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcPropertyTemplateDefinition.htm",
       "children": ["IfcPropertySetTemplate", "IfcPropertyTemplate"]
     },
     {
+      "id": "IfcPropertySetTemplate",
+      "label": "IfcPropertySetTemplate",
+      "kind": "entity",
+      "description": "Declares a property set: its name, the entities it applies to, and the property templates it contains. Each file in propertysets-ifc-4x3/ is a collection of these.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcPropertySetTemplate.htm",
+      "children": []
+    },
+    {
+      "id": "IfcPropertyTemplate",
+      "label": "IfcPropertyTemplate",
+      "kind": "abstract",
+      "description": "Declares a single property within a property set template.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcPropertyTemplate.htm",
+      "children": ["IfcSimplePropertyTemplate", "IfcComplexPropertyTemplate"]
+    },
+    {
+      "id": "IfcSimplePropertyTemplate",
+      "label": "IfcSimplePropertyTemplate",
+      "kind": "entity",
+      "description": "Declares one property: name, template type (single value, enumerated value, and so on), measure type, and enumerators where applicable.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcSimplePropertyTemplate.htm",
+      "children": []
+    },
+    {
+      "id": "IfcComplexPropertyTemplate",
+      "label": "IfcComplexPropertyTemplate",
+      "kind": "entity",
+      "description": "Declares a property that groups other property templates.",
+      "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcComplexPropertyTemplate.htm",
+      "children": []
+    },
+
+    {
       "id": "IfcRelationship",
       "label": "IfcRelationship",
       "kind": "abstract",
-      "description": "Superclass for IFC relationship entities (e.g., decomposition, assignment, connectivity).",
+      "description": "Superclass for IFC relationship entities: decomposition, assignment, association and connectivity.",
       "url": "https://ifc43-docs.standards.buildingsmart.org/IFC/RELEASE/IFC4x3/HTML/lexical/IfcRelationship.htm",
       "children": []
     }

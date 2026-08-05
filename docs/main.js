@@ -1,20 +1,8 @@
-/**
- * Application bootstrap.
- * Fetches schema.json, initialises all modules, and wires the toolbar button.
- */
 import { state } from "./modules/state.js";
 import { buildIndexes } from "./modules/schema.js";
 import { renderSchemaInfo } from "./modules/inspector.js";
 import { setupSearch } from "./modules/search.js";
-import {
-  renderTree,
-  initTree,
-  initTreeExpansion,
-  updateToggleAllBtn,
-  expandAll,
-  collapseAll,
-  getAllExpandableIds,
-} from "./modules/tree.js";
+import { renderTree, initTree, initTreeExpansion } from "./modules/tree.js";
 
 async function main() {
   const res = await fetch("schema.json", { cache: "no-store" });
@@ -24,15 +12,6 @@ async function main() {
   buildIndexes();
   renderSchemaInfo();
   setupSearch();
-
-  const elToggleAllBtn = document.getElementById("toggleAllBtn");
-  if (elToggleAllBtn) {
-    elToggleAllBtn.addEventListener("click", () => {
-      const allExpanded = getAllExpandableIds().every((id) => state.expandedNodes.has(id));
-      if (allExpanded) collapseAll();
-      else expandAll();
-    });
-  }
 
   initTree();          // wire delegated listeners — called exactly once
   initTreeExpansion();

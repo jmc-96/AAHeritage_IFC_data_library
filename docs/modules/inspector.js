@@ -1,8 +1,5 @@
-/**
- * Inspector sidebar rendering.
- * Renders node metadata into the right-hand panel and the schema info panel.
- */
 import { state } from "./state.js";
+import { resolvableChildren } from "./schema.js";
 import { escapeHtml } from "./utils.js";
 
 const elInspector = document.getElementById("inspectorContent");
@@ -10,6 +7,15 @@ const elSchemaInfo = document.getElementById("schemaInfo");
 
 function nodeKindChip(kind) {
   return `<span class="kchip">${escapeHtml(kind || "entity")}</span>`;
+}
+
+function safeDocUrl(url) {
+  if (!url) return null;
+  try {
+    return new URL(url, document.baseURI).protocol === "https:" ? url : null;
+  } catch {
+    return null;
+  }
 }
 
 export function setInspector(nodeId) {
@@ -20,7 +26,7 @@ export function setInspector(nodeId) {
   const n = state.nodeById.get(nodeId);
   if (!n) return;
 
-  const childCount = (n.children || []).length;
+  const childCount = resolvableChildren(n).length;
   const parents = state.parentIndex.get(nodeId);
   const parentLabel =
     parents && parents.size
@@ -30,8 +36,9 @@ export function setInspector(nodeId) {
   const desc = n.description
     ? `<div class="inspector-section">${escapeHtml(n.description)}</div>`
     : "";
-  const link = n.url
-    ? `<div class="inspector-section"><a href="${escapeHtml(n.url)}" target="_blank" rel="noopener noreferrer" class="doc-link">📖 View official buildingSMART documentation ↗</a></div>`
+  const docUrl = safeDocUrl(n.url);
+  const link = docUrl
+    ? `<div class="inspector-section"><a href="${escapeHtml(docUrl)}" target="_blank" rel="noopener noreferrer" class="doc-link">📖 View official buildingSMART documentation ↗</a></div>`
     : "";
   const raw = `<div class="pre">${escapeHtml(JSON.stringify(n, null, 2))}</div>`;
 

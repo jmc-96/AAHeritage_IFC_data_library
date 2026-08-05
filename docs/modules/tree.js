@@ -1,6 +1,5 @@
-/**Tree rendering, expand/collapse state, and interaction */
-
 import { state } from "./state.js";
+import { resolvableChildren } from "./schema.js";
 import { escapeHtml } from "./utils.js";
 import { setInspector } from "./inspector.js";
 
@@ -9,10 +8,23 @@ const elToggleAllBtn = document.getElementById("toggleAllBtn");
 
 /* ── Helpers ─────────────────────────────────────────────────────────────── */
 
+/** Look up a rendered row by node id. CSS.escape guards ids containing quotes. */
+function rowByNodeId(nodeId) {
+  return elTreeContent.querySelector(`[data-node="${CSS.escape(nodeId)}"]`);
+}
+
+/** True when nodeId sits under the same parent set as `parents` (both may be undefined for roots). */
+function sharesParent(nodeId, parents) {
+  const own = state.parentIndex.get(nodeId);
+  if (!own || !parents) return !own && !parents;
+  return own.size === parents.size && [...own].every((p) => parents.has(p));
+}
+
+/** Children of nodeId, resolvable ones only, ordered abstract-first then by label. */
 function sortedChildren(nodeId) {
   const n = state.nodeById.get(nodeId);
   if (!n) return [];
-  return [...(n.children || [])].sort((a, b) => {
+  return resolvableChildren(n).sort((a, b) => {
     const na = state.nodeById.get(a);
     const nb = state.nodeById.get(b);
     const ka = na?.kind === "abstract" ? 0 : 1;
@@ -22,11 +34,12 @@ function sortedChildren(nodeId) {
   });
 }
 
-function flattenTree(nodeId, depth, guidesPrefix, isLast) {
+function flattenTree(nodeId, depth, guidesPrefix, posinset, setsize) {
   const rows = [];
   const n = state.nodeById.get(nodeId);
   if (!n) return rows;
 
+  const isLast = posinset === setsize;
   const guides = [...guidesPrefix];
   if (depth > 0) guides.push(isLast ? "corner" : "branch");
 
@@ -34,14 +47,22 @@ function flattenTree(nodeId, depth, guidesPrefix, isLast) {
   const hasChildren = children.length > 0;
   const isExpanded = state.expandedNodes.has(nodeId);
 
-  rows.push({ id: nodeId, depth, guides, kind: n.kind || "entity", hasChildren, isExpanded });
+  rows.push({
+    id: nodeId,
+    depth,
+    guides,
+    kind: n.kind || "entity",
+    hasChildren,
+    isExpanded,
+    posinset,
+    setsize,
+  });
 
   if (isExpanded) {
     for (let i = 0; i < children.length; i++) {
-      const childIsLast = i === children.length - 1;
       const childPrefix = [...guidesPrefix];
       if (depth > 0) childPrefix.push(isLast ? "blank" : "line");
-      rows.push(...flattenTree(children[i], depth + 1, childPrefix, childIsLast));
+      rows.push(...flattenTree(children[i], depth + 1, childPrefix, i + 1, children.length));
     }
   }
   return rows;
@@ -49,14 +70,17 @@ function flattenTree(nodeId, depth, guidesPrefix, isLast) {
 
 /* ── Exported expand/collapse helpers ────────────────────────────────────── */
 
-export function getAllExpandableIds() {
-  return state.schema.nodes.filter((n) => (n.children || []).length > 0).map((n) => n.id);
+function getAllExpandableIds() {
+  return state.schema.nodes.filter((n) => resolvableChildren(n).length > 0).map((n) => n.id);
+}
+
+function areAllExpanded() {
+  return getAllExpandableIds().every((id) => state.expandedNodes.has(id));
 }
 
 export function updateToggleAllBtn() {
   if (!elToggleAllBtn) return;
-  const allExpanded = getAllExpandableIds().every((id) => state.expandedNodes.has(id));
-  elToggleAllBtn.textContent = allExpanded ? "Collapse All" : "Expand All";
+  elToggleAllBtn.textContent = areAllExpanded() ? "Collapse All" : "Expand All";
 }
 
 export function toggleTreeNode(nodeId) {
@@ -75,13 +99,13 @@ export function initTreeExpansion() {
   updateToggleAllBtn();
 }
 
-export function expandAll() {
+function expandAll() {
   for (const id of getAllExpandableIds()) state.expandedNodes.add(id);
   updateToggleAllBtn();
   renderTree();
 }
 
-export function collapseAll() {
+function collapseAll() {
   state.expandedNodes.clear();
   for (const r of state.schema.roots || []) state.expandedNodes.add(r);
   updateToggleAllBtn();
@@ -93,9 +117,9 @@ export function collapseAll() {
 export function renderTree() {
   if (!elTreeContent) return;
   const allRows = [];
-  const roots = state.schema.roots || [];
+  const roots = (state.schema.roots || []).filter((id) => state.nodeById.has(id));
   for (let i = 0; i < roots.length; i++) {
-    allRows.push(...flattenTree(roots[i], 0, [], i === roots.length - 1));
+    allRows.push(...flattenTree(roots[i], 0, [], i + 1, roots.length));
   }
 
   elTreeContent.innerHTML = allRows
@@ -123,6 +147,10 @@ export function renderTree() {
           class="tree-row${isHighlighted ? " highlighted" : ""}${isSelected ? " selected" : ""}"
           role="treeitem"
           ${ariaExpanded}
+          aria-selected="${isSelected}"
+          aria-level="${row.depth + 1}"
+          aria-posinset="${row.posinset}"
+          aria-setsize="${row.setsize}"
           tabindex="-1"
           data-node="${escapeHtml(row.id)}"
           ${row.hasChildren ? `data-toggle="${escapeHtml(row.id)}"` : ""}
@@ -138,7 +166,7 @@ export function renderTree() {
 
   // Roving tabindex: exactly one treeitem is reachable via Tab at a time.
   const tabTarget =
-    elTreeContent.querySelector(`[data-node="${state.selected}"]`) ||
+    (state.selected && rowByNodeId(state.selected)) ||
     elTreeContent.querySelector("[role='treeitem']");
   if (tabTarget) tabTarget.setAttribute("tabindex", "0");
 }
@@ -146,6 +174,13 @@ export function renderTree() {
 /* ── Event wiring (called once from main.js) ─────────────────────────────── */
 
 export function initTree() {
+  if (elToggleAllBtn) {
+    elToggleAllBtn.addEventListener("click", () => {
+      if (areAllExpanded()) collapseAll();
+      else expandAll();
+    });
+  }
+
   elTreeContent.addEventListener("click", (e) => {
     const row = e.target.closest("[data-node]");
     if (!row) return;
@@ -162,7 +197,7 @@ export function initTree() {
 
     // Re-focus after innerHTML rebuild
     requestAnimationFrame(() => {
-      const el = elTreeContent.querySelector(`[data-node="${id}"]`);
+      const el = rowByNodeId(id);
       if (el) { el.setAttribute("tabindex", "0"); el.focus(); }
     });
   });
@@ -184,7 +219,7 @@ export function initTree() {
 
     const refocusAfterRender = (nodeId) => {
       requestAnimationFrame(() => {
-        const el = elTreeContent.querySelector(`[data-node="${nodeId}"]`);
+        const el = rowByNodeId(nodeId);
         if (el) { el.setAttribute("tabindex", "0"); el.focus(); }
       });
     };
@@ -199,6 +234,32 @@ export function initTree() {
         e.preventDefault();
         moveFocus(rows[idx - 1]);
         break;
+
+      case "Home":
+        e.preventDefault();
+        moveFocus(rows[0]);
+        break;
+
+      case "End":
+        e.preventDefault();
+        moveFocus(rows[rows.length - 1]);
+        break;
+
+      case "*": {
+        e.preventDefault();
+        const id = current.dataset.node;
+        if (!id) break;
+        const parents = state.parentIndex.get(id);
+        const expandable = rows
+          .map((r) => r.dataset.toggle)
+          .filter((t) => t && sharesParent(t, parents));
+        if (!expandable.length) break;
+        for (const t of expandable) state.expandedNodes.add(t);
+        updateToggleAllBtn();
+        renderTree();
+        refocusAfterRender(id);
+        break;
+      }
 
       case "ArrowRight": {
         e.preventDefault();

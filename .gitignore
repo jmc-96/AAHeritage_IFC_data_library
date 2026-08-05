@@ -4,9 +4,6 @@ ehthumbs.db
 desktop.ini
 .DS_Store
 
-
-ontology/
-
 # Dependencies
 node_modules/
 
@@ -14,12 +11,10 @@ node_modules/
 dist/
 .vite/
 
-# Local environment files
+# Local environment files and temp files
 .env
 .env.*
 !.env.example
-
-# BIM software backups / temp files
 *.bak
 *.tmp
 *.temp

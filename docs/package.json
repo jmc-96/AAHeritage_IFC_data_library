@@ -1,15 +1,23 @@
 {
-  "name": "docs",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "name": "aaheritage-ifc-schema-browser",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Static browser for the IFC4X3 class subset used by the A2Heritage IFC data library",
+  "keywords": [
+    "ifc",
+    "ifc4x3",
+    "hbim",
+    "openbim",
+    "cultural-heritage",
+    "cidoc-crm"
+  ],
+  "author": "Jesus Munoz-Cadiz",
+  "license": "MIT",
+  "type": "module",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "devDependencies": {
     "vite": "^8.0.16"
   }

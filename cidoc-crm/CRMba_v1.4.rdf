@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+CRMba 1.4 Encoded in RDFS
+
+RDFS created by FORTH-ICS April 14, 2016
+
+Encoding Rules:
+1. The RDF spelling rules do not allow blanks. Hence we have replaced them by underscores.
+   The blank between the concept identifier and concept name is replaced by underscore too.
+   For instance "B1_Built_Work" or "BP1_has_section".
+
+2. RDF does not allow to instantiate properties beginning from a range value.
+   Therefore, each CRMba property is represented as two RDFS properties.
+   For instance "BP1_has_section (is_section_of)" is represented as:
+   "BP1_has_section" for the domain to range direction and "BP1i_is_section_of" for the range to domain direction.
+
+-->
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" 
+xml:base="http://www.ics.forth.gr/isl/CRMba/" xml:lang="en">
+
+
+<rdfs:Class rdf:about="B1_Built_Work">
+	<rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E92_Spacetime_Volume"/>
+	<rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E24_Physical_Man-Made_Thing"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="B2_Morphological_Building_Section">
+	<rdfs:subClassOf rdf:resource="B1_Built_Work"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="B3_Filled_Morphological_Building_Section">
+	<rdfs:subClassOf rdf:resource="B2_Morphological_Building_Section"/>
+	<rdfs:subClassOf rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E24_Physical_Man-Made_Thing"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="B4_Empty_Morphological_Building_Section">
+	<rdfs:subClassOf rdf:resource="http://www.ics.forth.gr/isl/CRMsci/S20_Physical_Feature"/>
+</rdfs:Class>
+
+<rdfs:Class rdf:about="B5_Stratigraphic_Building_Unit">
+	<rdfs:subClassOf rdf:resource="http://www.ics.forth.gr/isl/CRMarchaeo/A2_Stratigraphic_Volume_Unit"/>
+</rdfs:Class>
+
+
+<rdf:Property rdf:about="BP1_is_section_of">
+	<rdfs:domain rdf:resource="B2_Morphological_Building_Section"/>
+	<rdfs:range rdf:resource="B1_Built_Work"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP1i_has_section">
+	<rdfs:domain rdf:resource="B1_Built_Work"/>
+	<rdfs:range rdf:resource="B2_Morphological_Building_Section"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP2_is_constituent_of">
+	<rdfs:domain rdf:resource="B5_Stratigraphic_Building_Unit"/>
+	<rdfs:range rdf:resource="B1_Built_Work"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP2i_is_constituted_by">
+	<rdfs:domain rdf:resource="B1_Built_Work"/>
+	<rdfs:range rdf:resource="B5_Stratigraphic_Building_Unit"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP3_is_spatial_temporary_equal_to">
+	<rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E92_Spacetime_Volume"/>
+	<rdfs:range rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E92_Spacetime_Volume"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP3i_is_spatial_temporary_equal_to">
+	<rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E92_Spacetime_Volume"/>
+	<rdfs:range rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E92_Spacetime_Volume"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP4_terminates_the_constituency">
+	<rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E80_Part_removal"/>
+	<rdfs:range rdf:resource="B2_Morphological_Building_Section"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP4i_constituency_was_terminated_by">
+	<rdfs:domain rdf:resource="B2_Morphological_Building_Section"/>
+	<rdfs:range rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E80_Part_removal"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP5_initiates_the_constituency">
+	<rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E79_Part_addition"/>
+	<rdfs:range rdf:resource="B2_Morphological_Building_Section"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP5i_constituency_was_initiated_by">
+	<rdfs:domain rdf:resource="B2_Morphological_Building_Section"/>
+	<rdfs:range rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E79_Part_addition"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP11_is_connected_to">
+	<rdfs:domain rdf:resource="B2_Morphological_Building_Section"/>
+	<rdfs:range rdf:resource="B2_Morphological_Building_Section"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP11i_is_connected_to">
+	<rdfs:domain rdf:resource="B2_Morphological_Building_Section"/>
+	<rdfs:range rdf:resource="B2_Morphological_Building_Section"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP12_is_connected_through">
+	<rdfs:domain rdf:resource="B2_Morphological_Building_Section"/>
+	<rdfs:range rdf:resource="B2_Morphological_Building_Section"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP12i_is_connected_through">
+	<rdfs:domain rdf:resource="B2_Morphological_Building_Section"/>
+	<rdfs:range rdf:resource="B2_Morphological_Building_Section"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP13_used_specific_object">
+	<rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E12_Production"/>
+	<rdfs:range rdf:resource="B5_Stratigraphic_Building_Unit"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP13i_was_specific_object_used_by">
+	<rdfs:domain rdf:resource="B5_Stratigraphic_Building_Unit"/>
+	<rdfs:range rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E12_Production"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP14_re-used_specific_object">
+	<rdfs:domain rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E12_Production"/>
+	<rdfs:range rdf:resource="B5_Stratigraphic_Building_Unit"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP14i_was_specific_object_re-used_by">
+	<rdfs:domain rdf:resource="B5_Stratigraphic_Building_Unit"/>
+	<rdfs:range rdf:resource="http://www.cidoc-crm.org/cidoc-crm/E12_Production"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP15_is_equal_to">
+	<rdfs:domain rdf:resource="B5_Stratigraphic_Building_Unit"/>
+	<rdfs:range rdf:resource="B3_Filled_Morphological_Building_Section"/>
+</rdf:Property>
+
+<rdf:Property rdf:about="BP15i_is_equal_to">
+	<rdfs:domain rdf:resource="B3_Filled_Morphological_Building_Section"/>
+	<rdfs:range rdf:resource="B5_Stratigraphic_Building_Unit"/>
+</rdf:Property>
+
+</rdf:RDF>

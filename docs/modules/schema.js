@@ -1,27 +1,37 @@
-/**
- * Schema indexing and graph traversal.
- * Responsible for building the lookup maps from schema.json
- * and finding ancestor paths (used by search to expand the tree).
- */
+
 import { state } from "./state.js";
 
-/** Build nodeById and parentIndex from schema.nodes. */
+
+export function resolvableChildren(node) {
+  return (node?.children || []).filter((id) => state.nodeById.has(id));
+}
+
 export function buildIndexes() {
   state.nodeById = new Map(state.schema.nodes.map((n) => [n.id, n]));
   state.parentIndex = new Map();
 
+  const dangling = [];
+
   for (const n of state.schema.nodes) {
     for (const child of n.children || []) {
+      if (!state.nodeById.has(child)) dangling.push(`${n.id} → ${child}`);
       if (!state.parentIndex.has(child)) state.parentIndex.set(child, new Set());
       state.parentIndex.get(child).add(n.id);
     }
   }
+
+  for (const r of state.schema.roots || []) {
+    if (!state.nodeById.has(r)) dangling.push(`roots → ${r}`);
+  }
+
+  if (dangling.length) {
+    console.warn(
+      `schema.json references ${dangling.length} node(s) that do not exist:\n  ` +
+        dangling.join("\n  ")
+    );
+  }
 }
 
-/**
- * BFS upward from targetId to find a path from any root node.
- * Returns an array of IDs from root → target, or null if unreachable.
- */
 export function findPathFromRoots(targetId) {
   const roots = new Set(state.schema.roots || []);
   if (roots.has(targetId)) return [targetId];

@@ -1,8 +1,4 @@
-/**
- * Search and reset logic.
- * Listens to the search input and Reset button; expands ancestors
- * of the matched node and scrolls it into view.
- */
+
 import { state } from "./state.js";
 import { findPathFromRoots } from "./schema.js";
 import { setInspector } from "./inspector.js";
@@ -11,6 +7,11 @@ import { renderTree, initTreeExpansion, updateToggleAllBtn } from "./tree.js";
 const elSearch = document.getElementById("search");
 const elReset = document.getElementById("resetBtn");
 const elTreeContent = document.getElementById("treeContent");
+const elSearchStatus = document.getElementById("searchStatus");
+
+function setStatus(text) {
+  if (elSearchStatus) elSearchStatus.textContent = text;
+}
 
 export function setupSearch() {
   elSearch.addEventListener("input", () => {
@@ -18,6 +19,7 @@ export function setupSearch() {
 
     if (q.length === 0) {
       state.highlighted = null;
+      setStatus("");
       renderTree();
       return;
     }
@@ -36,7 +38,14 @@ export function setupSearch() {
         null;
     }
 
-    if (!hit) return;
+    if (!hit) {
+      setStatus(`No match. This browser covers ${state.nodeById.size} of the ~800 IFC4X3 classes.`);
+      state.highlighted = null;
+      renderTree();
+      return;
+    }
+
+    setStatus("");
 
     const path = findPathFromRoots(hit);
     if (path) {
@@ -58,6 +67,7 @@ export function setupSearch() {
     elSearch.value = "";
     state.highlighted = null;
     state.selected = null;
+    setStatus("");
     setInspector(null);
     initTreeExpansion();
     renderTree();

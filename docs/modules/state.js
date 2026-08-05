@@ -1,7 +1,3 @@
-/**
- * Shared application state.
- * Single source of truth passed by reference to all modules.
- */
 export const state = {
   schema: null,
   nodeById: new Map(),
