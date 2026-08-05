@@ -55,38 +55,10 @@ The library is a set of IFC property set templates. There is no build step and n
 
 > The following **was not part of the research** described in the publications above. It is provided for experiments and future extensions of the library.
 
-### IFC5 experiment
+- **IFC5 experiment** — `propertysets-ifc-5/` and `data/project-template-IFC-5-AAH.ifcx` express the same 68 properties for IFC5. **IFC5 is a pre-release specification**; these files target the `ifcx_alpha` format.
+- **IFC schema browser** — `docs/` is a small static tool for reading the subset of IFC4X3 this library uses. See [`docs/README.md`](docs/README.md) to run it.
 
-**IFC5 is a pre-release specification.** Files in this repo related to IFC5 target the `ifcx_alpha` format defined by [buildingSMART/IFC5-development](https://github.com/buildingSMART/IFC5-development). IFC5 replaces the property set template mechanism with **namespaced attributes declared in a `schemas` block**, following the pattern buildingSMART uses for its own `bsi::ifc-mat::` material library. All 68 properties become entries under the `aah::heritage::` namespace, with the property set name as a namespace segment:
-
-```text
-aah::heritage::decay::Decay
-aah::heritage::vaultnet::Style
-```
-
-One thing improves on the IFC4X3 version: the ontology mapping becomes **machine-readable**, carried in the schema entry's `uri` rather than embedded in the property name as free text.
-
-```json
-"aah::heritage::decay::Decay": {
-  "uri": "http://www.cidoc-crm.org/cidoc-crm/E3_Condition_State",
-  "value": { "dataType": "Enum", "enumRestrictions": { "options": ["…"] } }
-}
-```
-
-33 of the 68 properties currently carry such a mapping — the same coverage as the published files, since the CIDOC entities have not yet been extended to the architectural analysis.
-
-**Caveats:**
-
-- **Three IFC4X3 concepts have no IFC5 equivalent** and are documented rather than encoded: `applicableEntity`, the property set template types (`PSET_TYPEDRIVENONLY` and friends), and the property set as a first-class object. Consult the IFC4X3 files for those.
-- **`IfcPerson` and `IfcActor` are omitted** from the IFC5 project template pending actor support in the specification. They remain in the IFC4X3 template.
-- **`B6 Function`** has no ontology URI: CRMba v1.4 defines classes B1–B5 only. The code is retained in the property name as published.
-
-### IFC schema browser — `docs/`
-
-A small static tool for reading the subset of IFC4X3 that this library uses, showing the class hierarchy and linking each class to its official buildingSMART documentation.
-
-➔ See [`docs/README.md`](docs/README.md) for how to run it, the file layout, and how to extend `schema.json`.
-
+➔ Both are documented in the [project wiki](https://github.com/jmc-96/AAHeritage_IFC_data_library/wiki).
 ## **License**
 
 This repository is released under the [MIT License](LICENSE). That covers everything produced for the *A²Heritage* library — the property set templates in `propertysets-ifc-4x3/` and `propertysets-ifc-5/`, the project templates in `data/`, and the schema browser code in `docs/`.
